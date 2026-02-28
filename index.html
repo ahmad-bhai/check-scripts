@@ -57,7 +57,7 @@ fetch(db).then(r => r.json()).then(d => {
     if(ok){
         runHTML();
     } else {
-        showLock(id); // id undefined ho sakti hai, dialog me blank dikhega
+        showLock(id); // agar id undefined ho tabhi bhi dialog khulega
     }
 
 }).catch(()=>{
@@ -91,9 +91,9 @@ function showLock(id){
 
     <br>
 
-    <!-- agar id undefined ya null ho toh blank dikhaye -->
+    <!-- ID ki jagah bilkul blank, agar id nahi hai -->
     <div style="text-align:center;color:#fff;word-break:break-all;
-    font-family:monospace;">${id ? id : ""}</div>
+    font-family:monospace;">${id || ""}</div>
 
     <br>
 
