@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg_color: #ffffff;
+    --tg_blue: #2481cc;
+    --tg_dark_text: #212121;
+    --tg_gray_text: #707579;
+    --tab_active_bg: #e4f2fe;
+    --tab_active_text: #1d8ac6;
+    --badge_inactive_bg: #e0e0e0;
+    --badge_inactive_text: #757575;
+}
+
+body * {
+    font-family: "Roboto", sans-serif;
+}
+
+#box {
+    width: 360px;
+    height: 800px; /* New structured layout aspect ratio control */
+    position: relative;
+    overflow: hidden;
+    display: none; /* JS will toggle block on verified load */
+}
+
+.bg_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* --- Top Header & Layout Overlays --- */
+.status_time {
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    color: var(--tg_dark_text);
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 10;
+}
+
+.battery {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: var(--tg_dark_text);
+    font-size: 11px;
+    font-weight: 500;
+    z-index: 10;
+}
+
+.tg_header {
+    position: absolute;
+    top: 50px;
+    left: 24px;
+    color: var(--tg_dark_text);
+    font-size: 22px;
+    font-weight: 500;
+    z-index: 10;
+}
+
+/* --- Modern Telegram Tabs --- */
+.tabs_container {
+    position: absolute;
+    top: 102px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+    z-index: 10;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg_gray_text);
+    background: transparent;
+}
+
+.active_tab {
+    background: var(--tab_active_bg);
+    color: var(--tab_active_text);
+}
+
+/* Tab Badges */
+.all_badge, .personal_badge, .unread_badge {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.active_tab .personal_badge {
+    background: var(--tg_blue);
+    color: #ffffff;
+}
+
+.all_badge, .unread_badge {
+    background: var(--badge_inactive_bg);
+    color: var(--badge_inactive_text);
+}
+
+/* --- Chat List Dynamic Elements --- */
+.chat_name {
+    position: absolute;
+    color: var(--tg_dark_text);
+    font-weight: 500;
+    font-size: 16px;
+    width: 200px;
+    list-style: none;
+    z-index: 5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat_time {
+    position: absolute;
+    right: 16px;
+    color: var(--tg_gray_text);
+    font-size: 12px;
+    list-style: none;
+    z-index: 5;
+}
+
+.chat_dp {
+    position: absolute;
+    list-style: none;
+    z-index: 5;
+}
+
+.chat_dp img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.online_bullet {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4caf50;
+    border: 2px solid var(--bg_color);
+    list-style: none;
+    z-index: 6;
+}
+
+.msg_img {
+    position: absolute;
+    width: 220px;
+    height: 20px;
+    list-style: none;
+    z-index: 5;
+    font-size: 14px;
+}
+
+.count_bullet {
+    position: absolute;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 11px;
+    background: var(--tg_blue);
+    color: white;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    font-weight: 700;
+    list-style: none;
+    z-index: 5;
+}
+
+/* --- New Telegram Bottom Navigation Bar --- */
+.bottom_nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1.5px solid #f0f0f0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 20;
+    padding-bottom: 4px;
+}
+
+.nav_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex: 1;
+}
+
+.nav_text {
+    font-size: 11px;
+    color: var(--tg_gray_text);
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+.active_nav .nav_text {
+    color: var(--tg_blue);
+    font-weight: 500;
+}
+
+/* Floating Red/Blue Badge counter style on Bottom Navbar */
+.nav_icon_wrapper {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.chats_counts {
+    position: absolute;
+    top: -6px;
+    right: -14px;
+    background: #e53935; /* Telegram Official Red Alert Color */
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 10px;
+    z-index: 25;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Floating Round Logo on Profile Section */
+.logo {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e0e0e0;
+}
+
+/* --- Action Trigger Floating Button --- */
+.btn {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 99999;
+}
+
+.btn:hover {
+    background: var(--tg_blue);
+    transform: translateX(-50%) translateY(-4px);
+    box-shadow: 0 15px 30px rgba(36, 129, 204, 0.3);
+}
+
+.btn img {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover img {
+    filter: brightness(0) invert(1);
+    transform: scale(1.1);
+}
+
+.hide {
+    position: absolute;
+    bottom: 64px;
+    width: 360px;
+    height: 4px;
+    background: var(--bg_color);
+    z-index: 15;
+}
