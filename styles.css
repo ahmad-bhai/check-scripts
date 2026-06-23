@@ -6,276 +6,284 @@
     padding: 0;
 }
 
-:root {
-    --bg_color: white;
-    --fg_color: #2481cc; /* New modern Telegram Blue color */
-    --chat_name: rgb(33, 33, 33);
-    --chats_fg: #1d8ac6;
-    --chats_bg: #e4f2fe;
+:root{
+    --blue:#2799e8;
+    --light-blue:#e8f4ff;
+    --text:#222;
+    --gray:#8a8a8a;
+    --bg:#ffffff;
 }
 
-body * {
-    font-family: "Roboto", sans-serif;
+#box{
+    width:360px;
+    display:none;
+    position:relative;
 }
 
-#box {
-    width: 360px;
-    height: 800px;
-    position: relative;
-    overflow: hidden;
-    display: none;
+.bg_img{
+    width:100%;
 }
 
-img {
-    width: 100%;
+/* ======================
+   STATUS BAR
+====================== */
+
+.status_time{
+    position:absolute;
+    top:12px;
+    left:18px;
+    color:#666;
+    font-size:14px;
+    font-weight:500;
+    z-index:5;
 }
 
-.bg_img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+/* ======================
+   HEADER
+====================== */
+
+.telegram_title{
+    position:absolute;
+    top:52px;
+    left:20px;
+
+    font-size:28px;
+    font-weight:700;
+    color:var(--blue);
+
+    z-index:5;
 }
 
-/* --- Top Bar & Header Adjustments --- */
-.status_time {
-    position: absolute;
-    width: 40px;
-    height: 14px;
-    top: 15px;
-    left: 18px;
-    text-align: left;
-    color: #212121;
-    font-size: 13px;
-    font-weight: 500;
-    z-index: 10;
+.logo{
+    position:absolute;
+    top:55px;
+    right:65px;
+
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    object-fit:cover;
+
+    z-index:5;
 }
 
-.battery {
-    position: absolute;
-    width: 20px;
-    height: 12px;
-    top: 15px;
-    right: 18px;
-    text-align: right;
-    color: #212121;
-    font-size: 11px;
-    font-weight: 500;
-    z-index: 10;
+.chats_counts{
+    position:absolute;
+
+    top:63px;
+    right:112px;
+
+    background:var(--blue);
+
+    color:#fff;
+
+    font-size:12px;
+    font-weight:600;
+
+    padding:3px 8px;
+
+    border-radius:20px;
+
+    z-index:5;
 }
 
-.tg {
-    position: absolute;
-    width: 200px;
-    top: 48px;
-    left: 20px;
-    color: #212121;
-    font-weight: 500;
-    font-size: 22px;
-    z-index: 10;
+.search_icon{
+    position:absolute;
+
+    top:57px;
+    right:22px;
+
+    font-size:30px;
+
+    color:#222;
+
+    z-index:5;
 }
 
-/* --- Category Badges (Old system compatible values) --- */
-.All {
-    position: absolute;
-    width: 24px;
-    height: 18px;
-    top: 104px;
-    left: 82px;
-    text-align: center;
-    background: #e0e0e0;
-    color: #757575;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 11px;
-    line-height: 18px;
-    z-index: 10;
+.menu_icon{
+    position:absolute;
+
+    top:58px;
+    right:-5px;
+
+    font-size:30px;
+
+    color:#222;
+
+    z-index:5;
 }
 
-.Personal {
-    position: absolute;
-    width: 24px;
-    height: 18px;
-    top: 104px;
-    left: 198px;
-    text-align: center;
-    background: var(--fg_color);
-    color: white;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 11px;
-    line-height: 18px;
-    z-index: 10;
+/* ======================
+   TABS
+====================== */
+
+.tabs_wrap{
+    position:absolute;
+
+    top:112px;
+    left:12px;
+
+    width:336px;
+    height:52px;
+
+    background:#fff;
+
+    border-radius:30px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.08);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+
+    z-index:5;
 }
 
-.Unread {
-    position: absolute;
-    width: 24px;
-    height: 18px;
-    top: 104px;
-    left: 312px;
-    text-align: center;
-    background: #e0e0e0;
-    color: #757575;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 11px;
-    line-height: 18px;
-    z-index: 10;
+.tab{
+    position:relative;
+
+    color:#666;
+
+    font-size:16px;
+    font-weight:500;
+
+    display:flex;
+    align-items:center;
+    gap:5px;
 }
 
-/* --- Dynamic Lists Absolute Properties (Exactly matching JS logic) --- */
-.chat_name {
-    position: absolute;
-    color: var(--chat_name);
-    font-weight: 500;
-    font-size: 16px;
-    width: 190px;
-    list-style: none;
-    z-index: 5;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.tab_count{
+
+    background:#d8dce1;
+
+    color:#666;
+
+    min-width:28px;
+    height:24px;
+
+    border-radius:30px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:13px;
+    font-weight:600;
+
+    padding:0 8px;
 }
 
-.chat_time {
-    position: absolute;
-    right: 16px;
-    color: #707579;
-    font-size: 12px;
-    list-style: none;
-    text-align: right;
-    z-index: 5;
+.tab_active{
+    background:#eaf4fd;
+
+    color:#3596db;
+
+    height:42px;
+
+    padding:0 20px;
+
+    border-radius:24px;
 }
 
-.chat_dp {
-    position: absolute;
-    list-style: none;
-    z-index: 5;
+.tab_active .tab_count{
+    background:#6eb3e8;
+    color:#fff;
 }
 
-.chat_dp img {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    object-fit: cover;
+/* ======================
+   CHATS
+====================== */
+
+.chat_dp{
+    position:absolute;
+    list-style:none;
 }
 
-.online_bullet {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #4caf50;
-    border: 2px solid white;
-    list-style: none;
-    z-index: 6;
+.chat_dp img{
+    width:60px;
+    height:60px;
+    border-radius:50%;
 }
 
-.msg_img {
-    position: absolute;
-    width: 210px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    list-style: none;
-    z-index: 5;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.chat_name{
+    position:absolute;
+
+    color:#222;
+
+    font-size:18px;
+    font-weight:600;
+
+    list-style:none;
+
+    background:transparent;
 }
 
-.count_bullet {
-    position: absolute;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 4px;
-    border-radius: 10px;
-    background: var(--fg_color);
-    color: white;
-    text-align: center;
-    line-height: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    list-style: none;
-    z-index: 5;
+.chat_time{
+    position:absolute;
+
+    right:15px;
+
+    color:#3b8fcc;
+
+    font-size:14px;
+    font-weight:600;
+
+    list-style:none;
+
+    background:transparent;
 }
 
-/* --- New Fixed Bottom Navigation Bar Layout --- */
-.bottom_nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    background: #ffffff;
-    border-top: 1px solid #f0f0f0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 20;
-    padding-bottom: 4px;
+.msg_img{
+    position:absolute;
+
+    color:#4d9ad4;
+
+    font-size:16px;
+
+    list-style:none;
+
+    background:transparent;
 }
 
-.nav_item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    flex: 1;
-    height: 100%;
+.count_bullet{
+
+    position:absolute;
+
+    width:32px;
+    height:32px;
+
+    border-radius:50%;
+
+    background:#2b9ce9;
+
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+    font-weight:600;
+
+    list-style:none;
 }
 
-.nav_text {
-    font-size: 11px;
-    color: #707579;
-    margin-top: 26px; /* Space for hidden/rendered material icons or alignment */
-    font-weight: 400;
+.online_bullet{
+    display:none;
 }
 
-.active_text {
-    color: var(--fg_color);
-    font-weight: 500;
-}
+/* ======================
+   BOTTOM CUT
+====================== */
 
-/* Dynamic Left Side Counter Badge for Bottom Navigation */
-.chats_counts {
-    position: absolute;
-    top: 6px;
-    background: #f44336; /* Authentic Red Counter */
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 1px 5px;
-    border-radius: 10px;
-    z-index: 25;
+.hide{
+    position:absolute;
+    width:360px;
+    height:10px;
+    background:#fff;
+    bottom:0;
 }
-
-/* Dynamic Right Side Premium Rounded Profile Logo */
-.logo {
-    position: absolute;
-    top: 6px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* --- Utility Panels --- */
-.hide {
-    position: absolute;
-    bottom: 64px;
-    width: 360px;
-    height: 5px;
-    background: white;
-    z-index: 15;
-}
-
 /* --- Action Trigger Button Styling --- */
 .btn {
     position: fixed;
