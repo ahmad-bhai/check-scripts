@@ -7,35 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" href="tg.webp" type="image/x-icon">
-    <title>Android Feedbacks - New UI</title>
+    <title>Android Feedbacks</title>
 </head>
 
 <body>
     <div id="box">
-        <div class="status_time">2:32</div>
-        <div class="battery">25</div>
+        <!-- Top Device Info (Overlays on target position) -->
+        <div class="status_time">9:40</div>
+        <div class="battery">89</div>
+        <div class="tg">Telegram</div>
         
-        <div class="tg_header">Telegram</div>
+        <!-- Tabs Badges Counters -->
+        <div class="All">70</div>
+        <div class="Personal">148</div>
+        <div class="Unread">254</div>
         
-        <div class="tabs_container">
-            <div class="tab">All Chats <span class="all_badge">48</span></div>
-            <div class="tab active_tab">Personal <span class="personal_badge">46</span></div>
-            <div class="tab">Unread <span class="unread_badge">56</span></div>
-        </div>
-
+        <!-- JavaScript Dynamic Arrays Output (Keep these verbatim for your loops) -->
         <ul class="ul_chat_name"></ul>
         <ul class="ul_chat_time"></ul>
         <ul class="ul_chat_dp"></ul>
         <ul class="ul_online_bullet"></ul>
         <ul class="ul_msg_img"></ul>
         <ul class="ul_count_bullet"></ul>
-
+        
+        <!-- Bottom Dynamic Navigation Fixed Structure -->
         <div class="bottom_nav">
-            <div class="nav_item active_nav">
-                <div class="nav_icon_wrapper">
-                    <span class="chats_counts">47</span>
-                    </div>
-                <span class="nav_text">Chats</span>
+            <div class="nav_item">
+                <div class="chats_counts">2.6K</div>
+                <span class="nav_text active_text">Chats</span>
             </div>
             <div class="nav_item">
                 <span class="nav_text">Contacts</span>
@@ -50,10 +49,11 @@
         </div>
 
         <div class="hide"></div>
-
-        <img src="https://i.ibb.co/wZwdDYsc/Screenshot-20260623-143222.jpg" alt="Telegram Preview" class="bg_img">
+        <!-- Background Image Template -->
+        <img src="https://i.ibb.co/wZwdDYsc/Screenshot-20260623-143222.jpg" alt="" class="bg_img">
     </div>
 
+    <!-- Floating Top Bar Action Button -->
     <button class="btn" title="Download">
         <img src="https://raw.githubusercontent.com/ahmad-bhai/zeetex-currency-rate/0f914c89358480c47e3fdbb8a74f7020d938cf36/download.svg" alt="Download">
     </button>
@@ -61,7 +61,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
         integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://ahmad-ifeedback.vercel.app/scripts.js"></script>
+    <script src="check.js"></script>
 </body>
 
 </html>
