@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
 
 * {
     box-sizing: border-box;
@@ -6,317 +7,286 @@
     padding: 0;
 }
 
-:root{
-    --blue:#2799e8;
-    --light-blue:#e8f4ff;
-    --text:#222;
-    --gray:#8a8a8a;
-    --bg:#ffffff;
+:root {
+    --bg_color: white;
+    --fg_color: #59bf4a;
+    --chat_name: rgb(55, 55, 55);
+    --personal_bg: white;
+    --chats_fg: #517da2;
+    --chats_bg: #d5e8f7
 }
 
-#box{
-    width:360px;
-    display:none;
-    position:relative;
+body * {
+    font-family: "Roboto";
 }
 
-.bg_img{
-    width:100%;
+#box {
+    width: 360px;
+    display: none;
 }
 
-/* ======================
-   STATUS BAR
-====================== */
-
-.status_time{
-    position:absolute;
-    top:12px;
-    left:18px;
-    color:#666;
-    font-size:14px;
-    font-weight:500;
-    z-index:5;
+img {
+    width: 100%;
 }
 
-/* ======================
-   HEADER
-====================== */
 
-.telegram_title{
-    position:absolute;
-    top:52px;
-    left:20px;
-
-    font-size:28px;
-    font-weight:700;
-    color:var(--blue);
-
-    z-index:5;
+.chat_time {
+    position: absolute;
+    left: 246px;
+    color: #747f89;
+    font-size: 13px;
+    background: var(--bg_color);
+    padding-left: 15px;
+    list-style: none;
+    width: 100px;
+    text-align: right;
 }
 
-.logo{
-    position:absolute;
-    top:55px;
-    right:65px;
-
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    object-fit:cover;
-
-    z-index:5;
+.chat_dp {
+    position: absolute;
+    list-style: none;
 }
 
-.chats_counts{
-    position:absolute;
-
-    top:63px;
-    right:112px;
-
-    background:var(--blue);
-
-    color:#fff;
-
-    font-size:12px;
-    font-weight:600;
-
-    padding:3px 8px;
-
-    border-radius:20px;
-
-    z-index:5;
+.chat_dp img {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
 }
 
-.search_icon{
-    position:absolute;
-
-    top:57px;
-    right:22px;
-
-    font-size:30px;
-
-    color:#222;
-
-    z-index:5;
+.chat_named_dp {
+    width: 58px;
+    height: 58px;
+    display: block;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 58px;
+    font-size: larger;
+    font-weight: bold;
 }
 
-.menu_icon{
-    position:absolute;
-
-    top:58px;
-    right:-5px;
-
-    font-size:30px;
-
-    color:#222;
-
-    z-index:5;
+.online_bullet {
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: var(--fg_color);
+    border: 3px solid var(--bg_color);
+    list-style: none;
 }
 
-/* ======================
-   TABS
-====================== */
-
-.tabs_wrap{
-    position:absolute;
-
-    top:112px;
-    left:12px;
-
-    width:336px;
-    height:52px;
-
-    background:#fff;
-
-    border-radius:30px;
-
-    box-shadow:
-        0 2px 8px rgba(0,0,0,.08);
-
-    display:flex;
-    align-items:center;
-    justify-content:space-around;
-
-    z-index:5;
+.count_bullet {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--fg_color);
+    color: white;
+    text-align: center;
+    line-height: 25px;
+    list-style: none;
 }
 
-.tab{
-    position:relative;
-
-    color:#666;
-
-    font-size:16px;
-    font-weight:500;
-
-    display:flex;
-    align-items:center;
-    gap:5px;
+.msg_img {
+    position: absolute;
+    width: 250px;
+    height: 30px;
+    background: var(--bg_color);
+    display: flex;
 }
 
-.tab_count{
-
-    background:#d8dce1;
-
-    color:#666;
-
-    min-width:28px;
-    height:24px;
-
-    border-radius:30px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:13px;
-    font-weight:600;
-
-    padding:0 8px;
+.msg_img>img {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
 }
 
-.tab_active{
-    background:#eaf4fd;
-
-    color:#3596db;
-
-    height:42px;
-
-    padding:0 20px;
-
-    border-radius:24px;
+.msg_span_img {
+    color: #61a4c8;
+    margin-left: 5px;
 }
 
-.tab_active .tab_count{
-    background:#6eb3e8;
-    color:#fff;
+.msg_span_text {
+    color: #747f89;
+    margin-left: 5px;
 }
 
-/* ======================
-   CHATS
-====================== */
-
-.chat_dp{
-    position:absolute;
-    list-style:none;
+.msg_span_text_alone {
+    color: #747f89;
 }
 
-.chat_dp img{
-    width:60px;
-    height:60px;
-    border-radius:50%;
+.chat_name {
+    position: absolute;
+    color: var(--chat_name);
+    font-weight: 600;
+    width: 210px;
+    background: var(--bg_color);
+    list-style: none;
 }
 
-.chat_name{
-    position:absolute;
-
-    color:#222;
-
-    font-size:18px;
-    font-weight:600;
-
-    list-style:none;
-
-    background:transparent;
+.All {
+    position: absolute;
+    width: 28px;
+    height: 21px;
+    top: 103px;
+    left: 46px;
+    text-align: center;
+    background: var(--chats_bg);
+    color: var(--chats_fg);
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
 }
 
-.chat_time{
-    position:absolute;
-
-    right:15px;
-
-    color:#3b8fcc;
-
-    font-size:14px;
-    font-weight:600;
-
-    list-style:none;
-
-    background:transparent;
+.Unread {
+    position: absolute;
+    width: 33px;
+    height: 21px;
+    top: 103px;
+    right: calc(100% - 360px + 41px);
+    text-align: center;
+    background: var(--chats_bg);
+    color: var(--chats_fg);
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
 }
 
-.msg_img{
-    position:absolute;
-
-    color:#4d9ad4;
-
-    font-size:16px;
-
-    list-style:none;
-
-    background:transparent;
+.Personal {
+    position: absolute;
+    width: 33px;
+    height: 21px;
+    top: 103px;
+    left: 169px;
+    text-align: center;
+    background: var(--personal_bg);
+    color: var(--chats_fg);
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
 }
 
-.count_bullet{
-
-    position:absolute;
-
-    width:32px;
-    height:32px;
-
-    border-radius:50%;
-
-    background:#2b9ce9;
-
-    color:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:14px;
-    font-weight:600;
-
-    list-style:none;
+.voice {
+    color: #61a4c8;
 }
 
-.online_bullet{
-    display:none;
-}
-
-/* ======================
-   BOTTOM CUT
-====================== */
-
-.hide{
-    position:absolute;
-    width:360px;
-    height:10px;
-    background:#fff;
-    bottom:0;
-}
-/* --- Action Trigger Button Styling --- */
-.btn {
-    position: fixed;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
+.off {
+    position: absolute;
+    width: 200px;
+    top: 5px;
+    left: 75px;
+    font-weight: 900;
+    background: crimson;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(8px);
+    color: white;
+    outline: none;
+    border: none;
+    padding: 20px;
+    font-size: 20px;
+}
+
+.tg {
+    position: absolute;
+    width: 200px;
+    top: 40px;
+    left: 60px;
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+    background: var(--chats_fg);
+    padding: 10px;
+}
+
+.btn {
+    position: absolute;
+    top: 24px; /* Top se thoda balanced margin */
+    left: 50%; /* Screen ke center mein le jaane ke liye */
+    transform: translateX(-50%); /* Exact center alignment ke liye perfect fix */
+    cursor: pointer;
+    
+    /* Modern Glassmorphism Look */
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(8px); /* Background ko premium blur karega */
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 16px;
+    
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 16px; /* Ultra modern rounded corners */
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
+    width: 48px; /* Thoda sa size bada kiya taake click ratio behtar ho */
     height: 48px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 99999;
+    
+    /* Premium Floating Shadow */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 
+                0 8px 16px -6px rgba(0, 0, 0, 0.05),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.03);
+    
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Super smooth apple-like transition */
 }
 
+/* Hover Effect - Jab mouse upar aaye */
 .btn:hover {
-    background: var(--fg_color);
-    transform: translateX(-50%) translateY(-4px);
-    box-shadow: 0 15px 30px rgba(36, 129, 204, 0.3);
+    background: #2AA1DA;
+    border-color: rgba(0, 0, 0, 0.1);
+    /* Hover par X-axis ka center barkarar rakhte hue Y-axis par upar uthega */
+    transform: translateX(-50%) translateY(-4px); 
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12);
 }
 
+/* Active Effect - Jab click karein */
+.btn:active {
+    transform: translateX(-50%) translateY(-1px); /* Click karne par smooth feel */
+    box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.08);
+}
+
+/* Icon styling */
 .btn img {
-    width: 22px;
+    width: 22px; /* Perfect golden ratio size */
     height: 22px;
+    object-fit: contain;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Icon ka color agar dark na ho toh modern dark gray filter (optional) */
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); 
 }
 
+/* Hover par icon thoda sa scale up hoga aur ghumega nahi, simple dynamic lagega */
 .btn:hover img {
-    filter: brightness(0) invert(1);
+    transform: scale(1.1);
+}
+
+.hide {
+    position: absolute;
+    top: 790px;
+    width: 360px;
+    height: 10px;
+    background: var(--bg_color);
+}
+
+.status_time {
+    position: absolute;
+    width: 30px;
+    height: 12px;
+    top: 16px;
+    left: 47px;
+    text-align: right;
+    color: white;
+    font-size: 12px;
+    background: #517da2;
+}
+
+.battery {
+    position: absolute;
+    width: 16px;
+    height: 7px;
+    top: 19px;
+    left: 311px;
+    text-align: center;
+    color: white;
+    font-size: 7px;
+    background: #6c90b0;
 }
