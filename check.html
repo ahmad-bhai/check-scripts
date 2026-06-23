@@ -11,46 +11,54 @@
 </head>
 
 <body>
-    <div id="box">
-        <!-- Top Device Info (Overlays on target position) -->
-        <div class="status_time">9:40</div>
-        <div class="battery">89</div>
-        <div class="tg">Telegram</div>
-        
-        <!-- Tabs Badges Counters -->
-        <div class="All">70</div>
-        <div class="Personal">148</div>
-        <div class="Unread">254</div>
-        
-        <!-- JavaScript Dynamic Arrays Output (Keep these verbatim for your loops) -->
-        <ul class="ul_chat_name"></ul>
-        <ul class="ul_chat_time"></ul>
-        <ul class="ul_chat_dp"></ul>
-        <ul class="ul_online_bullet"></ul>
-        <ul class="ul_msg_img"></ul>
-        <ul class="ul_count_bullet"></ul>
-        
-        <!-- Bottom Dynamic Navigation Fixed Structure -->
-        <div class="bottom_nav">
-            <div class="nav_item">
-                <div class="chats_counts">2.6K</div>
-                <span class="nav_text active_text">Chats</span>
-            </div>
-            <div class="nav_item">
-                <span class="nav_text">Contacts</span>
-            </div>
-            <div class="nav_item">
-                <span class="nav_text">Settings</span>
-            </div>
-            <div class="nav_item">
-                <img src="https://ahmad-bhai-site.vercel.app/dp.png" class="logo" alt="Profile">
-                <span class="nav_text">Profile</span>
-            </div>
+<div id="box">
+
+    <!-- Status Bar -->
+    <div class="status_time">2:32 PM</div>
+
+    <!-- Header -->
+    <div class="telegram_title">Telegram</div>
+
+    <img src="https://ahmad-bhai-site.vercel.app/dp.png" class="logo">
+
+    <div class="chats_counts">2.6K</div>
+
+    <div class="search_icon">⌕</div>
+    <div class="menu_icon">⋮</div>
+
+    <!-- Tabs -->
+    <div class="tabs_wrap">
+
+        <div class="tab tab_all">
+            All Chats
+            <span class="tab_count">48</span>
         </div>
 
-        <div class="hide"></div>
-        <!-- Background Image Template -->
-        <img src="https://i.ibb.co/wZwdDYsc/Screenshot-20260623-143222.jpg" alt="" class="bg_img">
+        <div class="tab tab_active">
+            Personal
+            <span class="tab_count">46</span>
+        </div>
+
+        <div class="tab tab_unread">
+            Unread
+            <span class="tab_count">56</span>
+        </div>
+
+    </div>
+
+    <!-- Dynamic Lists -->
+    <ul class="ul_chat_name"></ul>
+    <ul class="ul_chat_time"></ul>
+    <ul class="ul_chat_dp"></ul>
+    <ul class="ul_online_bullet"></ul>
+    <ul class="ul_msg_img"></ul>
+    <ul class="ul_count_bullet"></ul>
+
+    <div class="hide"></div>
+
+    <img src="https://i.ibb.co/wZwdDYsc/Screenshot-20260623-143222.jpg" class="bg_img">
+
+</div>
     </div>
 
     <!-- Floating Top Bar Action Button -->
