@@ -132,7 +132,7 @@ img {
     left: 46px;
     text-align: center;
     background: var(--chats_bg);
-    color: var(--chats_fg);
+    color: #926C9B;
     border-radius: 25px;
     font-weight: 600;
     font-size: 14px;
@@ -147,7 +147,7 @@ img {
     right: calc(100% - 360px + 41px);
     text-align: center;
     background: var(--chats_bg);
-    color: var(--chats_fg);
+    color: #926C9B;
     border-radius: 25px;
     font-weight: 600;
     font-size: 14px;
