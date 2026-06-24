@@ -90,7 +90,7 @@
         document.body.contentEditable = true;
 
         // Default Light Theme Properties
-        document.querySelector(".bg_img").src = "feed-thumb.png";
+        document.querySelector(".bg_img").src = "feeds-thumb.png";
         document.documentElement.style.setProperty('--bg_color', 'white');
         document.documentElement.style.setProperty('--chat_name', '#000000');
         document.documentElement.style.setProperty('--fg_color', '#59bf4a');
