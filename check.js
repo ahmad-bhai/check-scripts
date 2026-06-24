@@ -93,7 +93,7 @@
         document.querySelector(".bg_img").src = "feeds-thumb.jpg";
         document.documentElement.style.setProperty('--bg_color', 'white');
         document.documentElement.style.setProperty('--chat_name', '#000000');
-        document.documentElement.style.setProperty('--fg_color', '#59bf4a');
+        document.documentElement.style.setProperty('--fg_color', '#9E67A0');
         document.documentElement.style.setProperty('--chats_bg', '#d5e8f7');
         document.documentElement.style.setProperty('--personal_bg', 'white');
         document.documentElement.style.setProperty('--personal_text', '#517da2');
