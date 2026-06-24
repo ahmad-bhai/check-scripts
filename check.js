@@ -121,7 +121,7 @@
                 let color = (Math.random() > 0.5) ? "#61a4c8" : "#747f89";
                 msgHtml = `<img src="${rImg}.png" style="width:18px;height:18px;border-radius:2px;vertical-align:middle;"> <span style="color:${color}; margin-left:5px;">Photo</span>`;
             } else if (typeRand < 0.55) {
-                msgHtml = `<span style="color:#61a4c8;">Voice message</span>`;
+                msgHtml = `<span style="color:#944FAA;">Voice message</span>`;
             } else {
                 let rMsg = msgsList[Math.floor(Math.random()*msgsList.length)];
                 msgHtml = `<span style="color:#747f89;">${rMsg}</span>`;
