@@ -115,15 +115,22 @@ module.exports = async (req, res) => {
           }
 
         } else {
-          const failMsg = `❌ Your Account Is Not Created With My Link\n\n👇 𝗙𝗼𝗹𝗹𝗼𝘄 𝗧𝗵𝗶𝘀 𝗽𝗿𝗼𝗰𝗲𝘀𝘀 𝘁𝗼 𝗷𝗼𝗶𝗻 𝗩𝗶𝗽\n\n🔹Create '𝗤𝘂𝗼𝘁𝗲𝘅' With The Link -👇\n\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n👉Deposit Minimum = 10$ Or Much As Possible`;
+          // Agar response aaye par success na ho tab ke liye fail message
+          const failMsg = `❌ Your Account Is Not Created With My Link\n\n👇 𝗙𝗼𝗹𝗹𝗼𝘄 𝗧𝗵𝗶𝘀 𝗽𝗿ο𝗰𝗲𝘀𝘀 𝘁𝗼 𝗷𝗼𝗶𝗻 𝗩𝗶𝗽\n\n🔹Create '𝗤𝘂𝗼𝘁𝗲𝘅' With The Link -👇\n\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n👉Deposit Minimum = 10$ Or Much As Possible`;
           ctx.replyWithMarkdown(failMsg, { disable_web_page_preview: true });
         }
 
       } catch (error) {
-        // Detailed Debug Logging for Vercel Console & User Message
+        // AGAR API NE 404 RESPONSE DIYA (ID NOT FOUND)
+        if (error.response && error.response.status === 404) {
+          const failMsg = `❌ Your Account Is Not Created With My Link\n\n👇 𝗙𝗼𝗹𝗹𝗼𝘄 𝗧𝗵𝗶𝘀 𝗽𝗿𝗼𝗰𝗲𝘀𝘀 𝘁𝗼 𝗷𝗼𝗶𝗻 𝗩𝗶𝗽\n\n🔹Create '𝗤𝘂𝗼𝘁𝗲𝘅' With The Link -👇\n\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n👉Deposit Minimum = 10$ Or Much As Possible`;
+          return ctx.replyWithMarkdown(failMsg, { disable_web_page_preview: true });
+        }
+
+        // Baki aane wale asli system errors ke liye (Jaise timeout)
         let errorDetails = error.message;
         if (error.response) {
-          errorDetails = `Status: ${error.response.status} - ${JSON.stringify(error.response.data)}`;
+          errorDetails = `Status: ${error.response.status}`;
         }
         console.error("API Fetch Error Details:", errorDetails);
 
