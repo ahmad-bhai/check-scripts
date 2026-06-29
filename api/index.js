@@ -1,7 +1,7 @@
 const { Telegraf, Markup } = require('telegraf');
 const axios = require('axios');
 
-// Yeh local memory variable hai (Vercel ke active rehne tak data save rakhega)
+// Local instance memory for temporary ID locking
 const lockedIds = {}; 
 
 module.exports = async (req, res) => {
@@ -56,18 +56,26 @@ module.exports = async (req, res) => {
         return ctx.replyWithMarkdown("*🚫 Please enter only 8 digits numbers ID*");
       }
 
-      // Check if ID is already used in local instance memory
+      // Check if ID is already used in local memory
       const alreadyUsedBy = lockedIds[trader_id];
       if (alreadyUsedBy && alreadyUsedBy !== telegramId) {
         return ctx.replyWithMarkdown("⚠️ *Access Denied!*\n\nThis ID is already registered with another user.");
       }
 
-      ctx.replyWithMarkdown(`🔍 *Verifying ID:* ${trader_id}...`);
+      await ctx.replyWithMarkdown(`🔍 *Verifying ID:* ${trader_id}...`);
 
       try {
-        // Affiliate Verification API Call
-        const response = await axios.post("https://affiliate-verify.vercel.app/api/postback", {
-          checkId: trader_id
+        // Full Fixed Affiliate API Post Request with Headers
+        const response = await axios({
+          method: 'post',
+          url: 'https://affiliate-verify.vercel.app/api/postback',
+          data: { checkId: trader_id },
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          },
+          timeout: 12000 // 12 seconds max waiting time
         });
 
         const data = response.data;
@@ -76,14 +84,14 @@ module.exports = async (req, res) => {
           const amount = parseFloat(data.deposit || data.balance || 0);
 
           if (amount > 0) {
-            // Memory mein ID lock karein
+            // Memory mein lock lagayein
             lockedIds[trader_id] = telegramId;
 
-            // Success Msg
+            // Success Output Message
             const msg = `✅ *Account Verified!*\n━━━━━━━━━━━━━━━━━━\n💰 *Total Deposit:* $${amount.toFixed(2)}\n💸 *Withdrawal:* $${data.withdraw || "0.00"}\n🌍 *Region:* ${data.country || "Unknown"}\n📊 *Status:* ${(data.status || "ACTIVE").toUpperCase()}\n━━━━━━━━━━━━━━━━━━\n✨ Your account is active under our academy.`;
             await ctx.replyWithMarkdown(msg);
 
-            // Generate One-Time Link
+            // Channel Invite Link Generation
             const channel_id = "-1003779200483"; 
             try {
               const inviteLinkObj = await ctx.telegram.createChatInviteLink(channel_id, {
@@ -99,7 +107,7 @@ module.exports = async (req, res) => {
               ]));
 
             } catch (linkErr) {
-              ctx.replyWithMarkdown("⚠️ *Note:* Account verified but invite link could not be generated. Make sure the bot is an Admin in the channel. Please contact support.");
+              ctx.replyWithMarkdown("⚠️ *Note:* Account verified but invite link could not be generated. Make sure the bot is an Admin in the channel with Invite Users rights.");
             }
 
           } else {
@@ -112,16 +120,22 @@ module.exports = async (req, res) => {
         }
 
       } catch (error) {
-        console.error(error);
-        ctx.replyWithMarkdown("⚠️ *System Error*\n\nUnable to connect to the verification server. Please try again later or contact support.");
+        // Detailed Debug Logging for Vercel Console & User Message
+        let errorDetails = error.message;
+        if (error.response) {
+          errorDetails = `Status: ${error.response.status} - ${JSON.stringify(error.response.data)}`;
+        }
+        console.error("API Fetch Error Details:", errorDetails);
+
+        ctx.replyWithMarkdown(`⚠️ *System Error*\n\nUnable to connect to the verification server.\n\n*Reason:* \`${error.message}\`\n\nPlease try again later or contact support.`);
       }
     });
 
-    // Handle incoming updates from Telegram
+    // Handling Telegram main updates object
     try {
       await bot.handleUpdate(req.body, res);
     } catch (err) {
-      console.error(err);
+      console.error("Handle Update Error:", err);
       if (!res.headersSent) res.sendStatus(500);
     }
   } else {
