@@ -123,7 +123,7 @@ module.exports = async (req, res) => {
       } catch (error) {
         // AGAR API NE 404 RESPONSE DIYA (ID NOT FOUND)
         if (error.response && error.response.status === 404) {
-          const failMsg = `❌ Your Account Is Not Created With My Link\n\n👇 𝗙𝗼𝗹𝗹𝗼𝘄 𝗧𝗵𝗶𝘀 𝗽𝗿𝗼𝗰𝗲𝘀𝘀 𝘁𝗼 𝗷𝗼𝗶𝗻 𝗩𝗶𝗽\n\n🔹Create '𝗤𝘂𝗼𝘁𝗲𝘅' With The Link -👇\n\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n👉Deposit Minimum = 10$ Or Much As Possible`;
+          const failMsg = `❌ Your Account Is Not Created With My Link\n\n👇 𝗙𝗼𝗹𝗹𝗼𝘄 𝗧𝗵𝗶𝘀 𝗽𝗿𝗼𝗰𝗲𝘀𝘀 𝘁𝗼 𝗷𝗼𝗶𝗻 𝗩𝗶𝗽\n\n🔹Create '𝗤𝘂𝗼𝘁𝗲𝘅' With The Link -👇\n\nhttps://market-qx.trade/sign-up/?lid=2056722\n\n👉Deposit Minimum = 10$ Or Much As Possible`;
           return ctx.replyWithMarkdown(failMsg, { disable_web_page_preview: true });
         }
 
