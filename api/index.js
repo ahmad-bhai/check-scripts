@@ -26,7 +26,8 @@ module.exports = async (req, res) => {
     // --- Start Command ---
     bot.start((ctx) => {
       const firstName = ctx.from.first_name || "Dear";
-      ctx.replyWithMarkdown(`👋*Hy Dear ${firstName}*\n\n*Please enter your Quotex Account ID (only numbers), after successful verification we will add you to the VIP group*`);
+      ctx.replyWithMarkdown(`👋*Hy Dear ${firstName}*\n\n*Please enter your Quotex Account ID (only numbers), after successful verification we will add you to the VIP group\n\nREGISTRATION LINK\n\n👇👇👇\n\n
+https://market-qx.trade/sign-up/?lid=2056722*`);
     });
 
     // --- Account Command ---
