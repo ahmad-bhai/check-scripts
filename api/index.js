@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
         return ctx.replyWithMarkdown("⚠️ *Access Denied!*\n\nThis ID is already registered with another user.");
       }
 
-      await ctx.replyWithMarkdown(`🔍 *Fetching All Profile Data for ID:* \`${trader_id}\`...`);
+      await ctx.replyWithMarkdown(`🔍 *Verifying ID:* \`${trader_id}\`...`);
 
       try {
         const response = await axios({
