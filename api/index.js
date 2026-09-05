@@ -1,13 +1,12 @@
 const { Telegraf, Markup } = require('telegraf');
 const axios = require('axios');
 
-// Local instance memory for temporary ID locking
 const lockedIds = {}; 
 
 module.exports = async (req, res) => {
   const { token } = req.query;
 
-  // 1. WEBHOOK SETUP URL: /api?token=BOT_TOKEN
+  // 1. WEBHOOK SETUP
   if (token && req.method === 'GET') {
     try {
       const bot = new Telegraf(token);
@@ -26,12 +25,12 @@ module.exports = async (req, res) => {
     // --- Start Command ---
     bot.start((ctx) => {
       const firstName = ctx.from.first_name || "Dear";
-      ctx.replyWithMarkdown(`👋 *Hy Dear ${firstName}*\n\nPlease enter your Quotex Account ID (only numbers), after successful verification we will add you to the VIP group.\n\n*REGISTRATION LINK*\n👇👇👇\nhttps://market-qx.trade/sign-up/?lid=2056722`);
+      ctx.replyWithMarkdown(`👋 *Hy Dear ${firstName}*\n\nPlease enter your Quotex Account ID (only numbers) to verify your registration and unlock VIP access.\n\n*REGISTRATION LINK*\n👇👇👇\nhttps://market-qx.trade/sign-up/?lid=2056722`);
     });
 
     // --- Account Command ---
     bot.command('account', (ctx) => {
-      ctx.replyWithMarkdown(`*How to create Quotex account?*\n\n1st step: Withdraw all your funds.\n2nd step: Delete your old Quotex account.\n3rd step: Open this link:\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n4th step: Select your country, enter your NEW email and secure password, agree to terms, and click Register.\n\n🎉 *Congratulations!* Your account is created. Now enter your Trader ID (only numbers).`);
+      ctx.replyWithMarkdown(`*How to create Quotex account?*\n\n1st step: Withdraw all your funds.\n2nd step: Delete your old Quotex account.\n3rd step: Open this link:\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n4th step: Select your country, enter your NEW email and secure password, agree to terms, and click Register.\n\n🎉 *Congratulations!* Your account is created. Now enter your Trader ID.`);
     });
 
     // --- Support Command ---
@@ -43,6 +42,13 @@ module.exports = async (req, res) => {
       );
     });
 
+    // --- Safe Number Parsing Helper ---
+    const parseAmount = (val) => {
+      if (!val) return 0.00;
+      const parsed = parseFloat(val);
+      return isNaN(parsed) ? 0.00 : parsed;
+    };
+
     // --- ID Verification Handler ---
     bot.on('text', async (ctx) => {
       const trader_id = ctx.message.text.trim();
@@ -53,13 +59,12 @@ module.exports = async (req, res) => {
         return ctx.replyWithMarkdown("❌ *Not a valid ID. Please enter numbers only.*");
       }
 
-      // Lock checking
       const alreadyUsedBy = lockedIds[trader_id];
       if (alreadyUsedBy && alreadyUsedBy !== telegramId) {
         return ctx.replyWithMarkdown("⚠️ *Access Denied!*\n\nThis ID is already registered with another user.");
       }
 
-      await ctx.replyWithMarkdown(`🔍 *Verifying Trader ID:* \`${trader_id}\`...`);
+      await ctx.replyWithMarkdown(`🔍 *Fetching All Profile Data for ID:* \`${trader_id}\`...`);
 
       try {
         const response = await axios({
@@ -77,34 +82,63 @@ module.exports = async (req, res) => {
         const data = response.data;
 
         if (data && data.success && data.trader) {
-          const trader = data.trader;
+          const t = data.trader;
           
-          // Updated parameters from API structure
-          const depositAmount = parseFloat(trader.total_deposit || trader.balance || trader.last_deposit_amount || 0);
-          const withdrawAmount = parseFloat(trader.total_withdrawal || trader.withdraw || trader.last_withdrawal_amount || 0);
-          const region = trader.country || "Unknown";
-          const status = (trader.status || "REGISTERED").toUpperCase();
+          // Fix NaN Issue: Checking all possible deposit/balance keys safely
+          const depositAmount = parseAmount(t.total_deposit || t.balance || t.sumdep || t.last_deposit_amount);
+          const withdrawAmount = parseAmount(t.total_withdrawal || t.withdraw || t.sumwithdraw || t.last_withdrawal_amount);
+          
+          const region = t.country || "Unknown";
+          const status = (t.status || "REGISTERED").toUpperCase();
 
-          // 1. Common Info Text (Yeh Har Haal Mein Show Hogi)
-          const infoText = `📊 *ACCOUNT PROFILE INFO*\n━━━━━━━━━━━━━━━━━━\n🆔 *Trader ID:* \`${trader.uid || trader_id}\`\n💰 *Total Deposit:* $${depositAmount.toFixed(2)}\n💸 *Total Withdrawal:* $${withdrawAmount.toFixed(2)}\n🌍 *Region:* ${region}\n📌 *Status:* ${status}\n━━━━━━━━━━━━━━━━━━`;
+          // Full Verification Indicators
+          const isReg = t.is_registered || t.status === 'reg' ? "✅ Verified" : "⚠️ Pending";
+          const isEmailConf = t.is_email_confirmed || t.status === 'conf' ? "✅ Confirmed" : "❌ Unconfirmed";
+          const isFTD = t.is_ftd || depositAmount > 0 ? "✅ Yes" : "❌ No";
 
-          // 2. Conditional Handling Base on Deposit Amount
+          // Tracking Parameters
+          const linkId = t.link_id || t.lid || "N/A";
+          const clickId = t.click_id || t.cid || "N/A";
+          const eventId = t.event_id || t.eid || "N/A";
+          const siteId = t.site_id || t.sid || "N/A";
+          const lastUpdated = t.last_updated ? new Date(t.last_updated).toLocaleString("en-US") : "N/A";
+
+          // Complete Detailed Info Text
+          const fullInfoText = `📊 *COMPLETE ACCOUNT PROFILE INFO*
+━━━━━━━━━━━━━━━━━━
+🆔 *Trader ID:* \`${t.uid || trader_id}\`
+💰 *Total Deposit:* $${depositAmount.toFixed(2)}
+💸 *Total Withdrawal:* $${withdrawAmount.toFixed(2)}
+🌍 *Country / Region:* ${region}
+📌 *Account Status:* ${status}
+
+📋 *VERIFICATION STATUS*
+• Registration: ${isReg}
+• Email Status: ${isEmailConf}
+• First Deposit (FTD): ${isFTD}
+
+🔗 *TRACKING DATA*
+• Link ID (LID): \`${linkId}\`
+• Click ID (CID): \`${clickId}\`
+• Event ID (EID): \`${eventId}\`
+• Site ID (SID): \`${siteId}\`
+⏱ *Last Updated:* \`${lastUpdated}\`
+━━━━━━━━━━━━━━━━━━`;
+
           if (depositAmount >= 10) {
-            // Lock ID in temporary instance memory
             lockedIds[trader_id] = telegramId;
 
-            await ctx.replyWithMarkdown(`${infoText}\n\n✨ *Account Status: Qualified for VIP!*`);
+            await ctx.replyWithMarkdown(`${fullInfoText}\n\n✨ *Status: Qualified for VIP Signals!*`);
 
-            // Generate One-time Private Invite Link
             const channel_id = "-1003779200483"; 
             try {
               const inviteLinkObj = await ctx.telegram.createChatInviteLink(channel_id, {
                 member_limit: 1,
-                name: `Member: ${trader.uid || trader_id}`
+                name: `Member: ${t.uid || trader_id}`
               });
 
               const invite_link = inviteLinkObj.invite_link;
-              const welcomeMsg = `🏆 *Congratulations!*\n\nYou have been granted full access to our *VIP Signals Channel*.\n\n⚠️ *Note:* This link is for *one-time use only* and will expire once you join.`;
+              const welcomeMsg = `🏆 *Congratulations!*\n\nYou have been granted access to our *VIP Signals Channel*.\n\n⚠️ *Note:* This link is for *one-time use only* and will expire once you join.`;
               
               await ctx.replyWithMarkdown(welcomeMsg, Markup.inlineKeyboard([
                 Markup.button.url("🚀 JOIN VIP CHANNEL NOW", invite_link)
@@ -112,30 +146,54 @@ module.exports = async (req, res) => {
 
             } catch (linkErr) {
               console.error("Link Gen Error:", linkErr.message);
-              ctx.replyWithMarkdown("⚠️ *Note:* Your account is verified, but invite link generation failed. Ensure Bot is Admin in Channel with 'Invite Users' rights.");
+              ctx.replyWithMarkdown("⚠️ *Note:* Account verified, but failed to issue link. Make sure the Bot is Admin in the channel.");
             }
 
           } else {
-            // Balance $0 ya < $10 ke case mein Warning + Profile Info
-            const depositWarning = `⚠️ *Deposit Required to Unlock VIP*\n\nYour Trader ID is correctly registered under our link, but your total deposit is *$${depositAmount.toFixed(2)}*.\n\n👉 *Requirement:* Make a minimum deposit of *$10* to get the VIP Channel link.\n\nAfter depositing, send your ID again to get instant VIP access!`;
+            const depositWarning = `⚠️ *Deposit Required to Unlock VIP*
+
+Your Trader ID is correctly registered under our link, but your deposit balance is *$${depositAmount.toFixed(2)}*.
+
+👉 *Requirement:* Make a minimum deposit of *$10* to unlock the VIP Channel link.
+
+After depositing, re-enter your ID here to get instant access!`;
             
-            await ctx.replyWithMarkdown(`${infoText}\n\n${depositWarning}`);
+            await ctx.replyWithMarkdown(`${fullInfoText}\n\n${depositWarning}`);
           }
 
         } else {
-          // Account Not Found under affiliate link
-          const failMsg = `❌ *Account Not Found*\n\nYour account is not registered under our official partner link.\n\n👇 *Follow these steps to join VIP:* \n\n1️⃣ Create a new Quotex account using this link:\nhttps://broker-qx.pro/sign-up/?lid=2056722\n\n2️⃣ Deposit minimum *$10*.\n3️⃣ Send your new Trader ID here for verification.`;
+          const failMsg = `❌ *Account Not Found*
+
+Your account is not registered under our official partner link.
+
+👇 *Follow these steps to join VIP:*
+
+1️⃣ Create a new Quotex account using this link:
+https://broker-qx.pro/sign-up/?lid=2056722
+
+2️⃣ Deposit minimum *$10*.
+3️⃣ Send your new Trader ID here for verification.`;
           ctx.replyWithMarkdown(failMsg, { disable_web_page_preview: true });
         }
 
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          const failMsg = `❌ *Account Not Found*\n\nYour account is not registered under our official partner link.\n\n👇 *Follow these steps to join VIP:* \n\n1️⃣ Create a new Quotex account using this link:\nhttps://market-qx.trade/sign-up/?lid=2056722\n\n2️⃣ Deposit minimum *$10*.\n3️⃣ Send your new Trader ID here for verification.`;
+          const failMsg = `❌ *Account Not Found*
+
+Your account is not registered under our official partner link.
+
+👇 *Follow these steps to join VIP:*
+
+1️⃣ Create a new Quotex account using this link:
+https://market-qx.trade/sign-up/?lid=2056722
+
+2️⃣ Deposit minimum *$10*.
+3️⃣ Send your new Trader ID here for verification.`;
           return ctx.replyWithMarkdown(failMsg, { disable_web_page_preview: true });
         }
 
         console.error("API Fetch Error Details:", error.message);
-        ctx.replyWithMarkdown(`⚠️ *System Error*\n\nUnable to connect to verification server.\n\n*Reason:* \`${error.message}\`\n\nPlease try again in a few moments.`);
+        ctx.replyWithMarkdown(`⚠️ *System Error*\n\nUnable to connect to verification server.\n\n*Reason:* \`${error.message}\``);
       }
     });
 
