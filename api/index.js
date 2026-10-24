@@ -3,6 +3,21 @@ const axios = require('axios');
 
 const lockedIds = {}; 
 
+// 🔐 20-Digit Permanent MSID (Aap yahan apni marzi ki 20-digit ID rakh sakte hain)
+const MSID = "98765432101234567890"; 
+
+// Backend Server se Authorization Check karne ki Function
+async function checkBotActivation() {
+  try {
+    const response = await axios.get(`https://ahmad-bhai-codes-shop.vercel.app/f?id=${MSID}`);
+    const data = typeof response.data === 'string' ? response.data.trim() : String(response.data);
+    return data === 'F';
+  } catch (err) {
+    console.error("Activation Check Error:", err.message);
+    return false; // Agar error aaye ya connection fail ho toh system block rahe
+  }
+}
+
 module.exports = async (req, res) => {
   const { token } = req.query;
 
@@ -11,13 +26,12 @@ module.exports = async (req, res) => {
     try {
       const bot = new Telegraf(token);
       
-      // Ensure clean URL format
       const host = req.headers['x-forwarded-host'] || req.headers.host;
       const protocol = req.headers['x-forwarded-proto'] || 'https';
       const webhookUrl = `${protocol}://${host}/api/index?token=${token}`;
 
       await bot.telegram.setWebhook(webhookUrl, {
-        drop_pending_updates: true // Purane pending updates clear karne ke liye
+        drop_pending_updates: true
       });
 
       return res.status(200).json({
@@ -29,7 +43,6 @@ module.exports = async (req, res) => {
     } catch (err) {
       console.error("Webhook Setup Error:", err);
 
-      // Handle Telegram 429 Rate Limit Gracefully
       if (err.response && err.response.error_code === 429) {
         const retryAfter = err.response.parameters?.retry_after || 1;
         return res.status(429).json({
@@ -49,6 +62,28 @@ module.exports = async (req, res) => {
   // 2. BOT HANDLING (POST Request)
   if (token && req.method === 'POST') {
     const bot = new Telegraf(token);
+
+    // 🔥 GLOBAL SECURITY CHECK: Har command/text se pehle backend verify hoga
+    const isAuthorized = await checkBotActivation();
+    
+    if (!isAuthorized) {
+      try {
+        const update = req.body;
+        let chatId = null;
+        if (update.message) {
+          chatId = update.message.chat.id;
+        } else if (update.callback_query) {
+          chatId = update.callback_query.message.chat.id;
+        }
+
+        if (chatId) {
+          await bot.telegram.sendMessage(chatId, `Bot Not Found\n${MSID}`);
+        }
+      } catch (e) {
+        console.error("Error sending block message:", e.message);
+      }
+      return res.status(200).send("Bot Unauthorized");
+    }
 
     // --- Start Command ---
     bot.start((ctx) => {
