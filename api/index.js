@@ -6,15 +6,43 @@ const lockedIds = {};
 module.exports = async (req, res) => {
   const { token } = req.query;
 
-  // 1. WEBHOOK SETUP
+  // 1. WEBHOOK SETUP (Handles Rate Limits & Retries)
   if (token && req.method === 'GET') {
     try {
       const bot = new Telegraf(token);
-      const webhookUrl = `https://${req.headers.host}/api/index?token=${token}`;
-      await bot.telegram.setWebhook(webhookUrl);
-      return res.status(200).send(`✅ Webhook Successfully Set for Bot! URL: ${webhookUrl}`);
+      
+      // Ensure clean URL format
+      const host = req.headers['x-forwarded-host'] || req.headers.host;
+      const protocol = req.headers['x-forwarded-proto'] || 'https';
+      const webhookUrl = `${protocol}://${host}/api/index?token=${token}`;
+
+      await bot.telegram.setWebhook(webhookUrl, {
+        drop_pending_updates: true // Purane pending updates clear karne ke liye
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "✅ Webhook Successfully Set!",
+        url: webhookUrl
+      });
+
     } catch (err) {
-      return res.status(500).send(`❌ Error setting webhook: ${err.message}`);
+      console.error("Webhook Setup Error:", err);
+
+      // Handle Telegram 429 Rate Limit Gracefully
+      if (err.response && err.response.error_code === 429) {
+        const retryAfter = err.response.parameters?.retry_after || 1;
+        return res.status(429).json({
+          error: "Rate Limit Exceeded",
+          message: `Telegram API is busy. Please retry after ${retryAfter} second(s).`,
+          retry_after: retryAfter
+        });
+      }
+
+      return res.status(500).json({
+        error: "Webhook Failed",
+        details: err.message
+      });
     }
   }
 
@@ -42,7 +70,6 @@ module.exports = async (req, res) => {
       );
     });
 
-    // --- Safe Number Parsing Helper ---
     const parseAmount = (val) => {
       if (val === undefined || val === null) return 0.00;
       const parsed = parseFloat(val);
@@ -84,26 +111,22 @@ module.exports = async (req, res) => {
         if (data && data.success && data.trader) {
           const t = data.trader;
           
-          // Accurate deposit / withdrawal fetch
           const depositAmount = parseAmount(t.total_deposit);
           const withdrawAmount = parseAmount(t.total_withdrawal);
           
           const region = t.country || "Unknown";
           const status = (t.status || "REGISTERED").toUpperCase();
 
-          // Full Verification Indicators
           const isReg = t.is_registered || t.status === 'reg' ? "✅ Verified" : "⚠️ Pending";
           const isEmailConf = t.is_email_confirmed || t.status === 'conf' ? "✅ Confirmed" : "❌ Unconfirmed";
           const isFTD = t.is_ftd || depositAmount > 0 ? "✅ Yes" : "❌ No";
 
-          // Tracking Parameters
           const linkId = t.link_id || "N/A";
           const clickId = t.click_id || "N/A";
           const eventId = t.event_id || "N/A";
           const siteId = t.site_id || "N/A";
           const lastUpdated = t.last_updated ? new Date(t.last_updated).toLocaleString("en-US") : "N/A";
 
-          // Complete Detailed Info Text
           const fullInfoText = `📊 *COMPLETE ACCOUNT PROFILE INFO*
 ━━━━━━━━━━━━━━━━━━
 🆔 *Trader ID:* \`${t.uid || trader_id}\`
@@ -132,7 +155,6 @@ module.exports = async (req, res) => {
 
             const channel_id = "-1003779200483"; 
             try {
-              // Direct Telegram Bot API call for Link Generation
               const inviteLinkObj = await bot.telegram.createChatInviteLink(channel_id, {
                 member_limit: 1,
                 name: `Member: ${t.uid || trader_id}`
