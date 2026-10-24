@@ -77,7 +77,7 @@ module.exports = async (req, res) => {
         }
 
         if (chatId) {
-          await bot.telegram.sendMessage(chatId, `**Bot Not Found**\n${MSID}\n**@Magic_Scripts\nContact To Unlock 🔓**`);
+          await bot.telegram.sendMessage(chatId, `*Bot Not Found*\n${MSID}\n@Magic_Scripts\nContact To Unlock 🔓`);
         }
       } catch (e) {
         console.error("Error sending block message:", e.message);
