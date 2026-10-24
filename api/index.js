@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   if (token && req.method === 'GET') {
     try {
       const bot = new Telegraf(token);
-      const webhookUrl = `https://${req.headers.host}/api?token=${token}`;
+      const webhookUrl = `https://${req.headers.host}/api/index?token=${token}`;
       await bot.telegram.setWebhook(webhookUrl);
       return res.status(200).send(`✅ Webhook Successfully Set for Bot! URL: ${webhookUrl}`);
     } catch (err) {
@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
 
     // --- Safe Number Parsing Helper ---
     const parseAmount = (val) => {
-      if (!val) return 0.00;
+      if (val === undefined || val === null) return 0.00;
       const parsed = parseFloat(val);
       return isNaN(parsed) ? 0.00 : parsed;
     };
@@ -84,9 +84,9 @@ module.exports = async (req, res) => {
         if (data && data.success && data.trader) {
           const t = data.trader;
           
-          // Fix NaN Issue: Checking all possible deposit/balance keys safely
-          const depositAmount = parseAmount(t.total_deposit || t.balance || t.sumdep || t.last_deposit_amount);
-          const withdrawAmount = parseAmount(t.total_withdrawal || t.withdraw || t.sumwithdraw || t.last_withdrawal_amount);
+          // Accurate deposit / withdrawal fetch
+          const depositAmount = parseAmount(t.total_deposit);
+          const withdrawAmount = parseAmount(t.total_withdrawal);
           
           const region = t.country || "Unknown";
           const status = (t.status || "REGISTERED").toUpperCase();
@@ -97,10 +97,10 @@ module.exports = async (req, res) => {
           const isFTD = t.is_ftd || depositAmount > 0 ? "✅ Yes" : "❌ No";
 
           // Tracking Parameters
-          const linkId = t.link_id || t.lid || "N/A";
-          const clickId = t.click_id || t.cid || "N/A";
-          const eventId = t.event_id || t.eid || "N/A";
-          const siteId = t.site_id || t.sid || "N/A";
+          const linkId = t.link_id || "N/A";
+          const clickId = t.click_id || "N/A";
+          const eventId = t.event_id || "N/A";
+          const siteId = t.site_id || "N/A";
           const lastUpdated = t.last_updated ? new Date(t.last_updated).toLocaleString("en-US") : "N/A";
 
           // Complete Detailed Info Text
@@ -132,7 +132,8 @@ module.exports = async (req, res) => {
 
             const channel_id = "-1003779200483"; 
             try {
-              const inviteLinkObj = await ctx.telegram.createChatInviteLink(channel_id, {
+              // Direct Telegram Bot API call for Link Generation
+              const inviteLinkObj = await bot.telegram.createChatInviteLink(channel_id, {
                 member_limit: 1,
                 name: `Member: ${t.uid || trader_id}`
               });
@@ -145,8 +146,8 @@ module.exports = async (req, res) => {
               ]));
 
             } catch (linkErr) {
-              console.error("Link Gen Error:", linkErr.message);
-              ctx.replyWithMarkdown("⚠️ *Note:* Account verified, but failed to issue link. Make sure the Bot is Admin in the channel.");
+              console.error("Link Gen Error:", linkErr?.response?.description || linkErr.message);
+              ctx.replyWithMarkdown("⚠️ *Note:* Account verified, but failed to issue link.\n\n*Fix:* Make sure the Bot is added as an **Admin** in the channel with **'Invite Users via Link'** permission.");
             }
 
           } else {
